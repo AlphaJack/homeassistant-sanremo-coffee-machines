@@ -56,8 +56,6 @@ class SanremoEntity(CoordinatorEntity[SanremoCoordinator]):
             sw_version=device.wifi_firmware,
             hw_version=device.board_firmware,
             configuration_url=self.coordinator.client.base_url,
-            serial_number=device.mac or None,
-            model_id=device.profile,
         )
         if device.mac:
             info["connections"] = {(CONNECTION_NETWORK_MAC, format_mac(device.mac))}

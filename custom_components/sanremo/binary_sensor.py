@@ -196,9 +196,7 @@ class SanremoAlarmSummary(SanremoEntity, BinarySensorEntity):
 
 
 class SanremoAlarm(SanremoEntity, BinarySensorEntity):
-    """One specific alarm bit."""
-
-    _attr_entity_registry_enabled_default = False
+    """One specific alarm bit. The aggregate sensor covers day-to-day use."""
 
     def __init__(self, coordinator: SanremoCoordinator, slug: str) -> None:
         super().__init__(
@@ -208,6 +206,7 @@ class SanremoAlarm(SanremoEntity, BinarySensorEntity):
                 translation_key=f"alarm_{slug}",
                 device_class=BinarySensorDeviceClass.PROBLEM,
                 entity_category=EntityCategory.DIAGNOSTIC,
+                entity_registry_enabled_default=False,
                 value_fn=lambda state, slug=slug: state.alarms.get(slug),
             ),
         )

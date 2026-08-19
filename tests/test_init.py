@@ -399,7 +399,7 @@ async def test_calendar_projects_the_schedule(
     """The scheduler is projected into calendar events."""
     await hass.config.async_set_time_zone("UTC")
     freezer.move_to("2026-08-17 05:00:00+00:00")  # Monday, before the first slot
-    state = hass.states.get("calendar.cube1_schedule")
+    state = hass.states.get("calendar.cube1_schedule_calendar")
     assert state is not None
 
     start = dt_util.now()
@@ -407,7 +407,7 @@ async def test_calendar_projects_the_schedule(
         CALENDAR_DOMAIN,
         "get_events",
         {
-            ATTR_ENTITY_ID: "calendar.cube1_schedule",
+            ATTR_ENTITY_ID: "calendar.cube1_schedule_calendar",
             "start_date_time": start.isoformat(),
             "end_date_time": (start + timedelta(days=7)).isoformat(),
         },
@@ -415,7 +415,7 @@ async def test_calendar_projects_the_schedule(
         return_response=True,
     )
 
-    events = response["calendar.cube1_schedule"]["events"]
+    events = response["calendar.cube1_schedule_calendar"]["events"]
     # Two windows Monday to Thursday, one Friday, one each weekend day: 11.
     assert len(events) == 11
     assert all(event["summary"] == "cube1" for event in events)
