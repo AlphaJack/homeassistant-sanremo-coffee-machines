@@ -1,0 +1,43 @@
+set_schedule_day:
+  fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          integration: sanremo
+    day:
+      required: true
+      selector:
+        select:
+          mode: dropdown
+          translation_key: weekday
+          options:
+            - monday
+            - tuesday
+            - wednesday
+            - thursday
+            - friday
+            - saturday
+            - sunday
+    slots:
+      required: true
+      example: |
+        - on: "07:00"
+          "off": "09:30"
+        - on: "18:00"
+          "off": "22:30"
+      selector:
+        object:
+    copy_to:
+      selector:
+        select:
+          multiple: true
+          translation_key: weekday
+          options:
+            - monday
+            - tuesday
+            - wednesday
+            - thursday
+            - friday
+            - saturday
+            - sunday

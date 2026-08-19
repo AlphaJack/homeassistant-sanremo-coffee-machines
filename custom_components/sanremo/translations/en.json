@@ -1,0 +1,407 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to your Sanremo machine",
+        "description": "Make sure the machine's Wi-Fi module is connected to the same network as Home Assistant. The Sanremo Connector app shows the address on its device list.",
+        "data": {
+          "host": "Host"
+        },
+        "data_description": {
+          "host": "IP address or hostname of the machine, for example 192.168.1.10"
+        }
+      },
+      "reconfigure": {
+        "title": "Change the machine address",
+        "data": {
+          "host": "Host"
+        },
+        "data_description": {
+          "host": "The machine's new IP address or hostname"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Could not reach the machine. Check the address, and that the machine is powered and on the network.",
+      "invalid_response": "The device answered, but not like a Sanremo Wi-Fi module. Check that the address belongs to the machine.",
+      "unknown": "Unexpected error"
+    },
+    "abort": {
+      "already_configured": "This machine is already set up",
+      "wrong_machine": "That address belongs to a different machine",
+      "reconfigure_successful": "Address updated"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Polling options",
+        "data": {
+          "scan_interval": "Polling interval"
+        },
+        "data_description": {
+          "scan_interval": "Seconds between reads. The machine's Wi-Fi module is small and answers one request at a time, so keep this at 10 seconds or more unless you need faster updates."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "command_failed": {
+      "message": "The machine rejected the command: {error}"
+    },
+    "invalid_operation_mode": {
+      "message": "{mode} is not a supported operation mode for this machine."
+    },
+    "scheduler_unsupported": {
+      "message": "This machine does not expose a programmable schedule."
+    },
+    "device_not_found": {
+      "message": "No device found with ID {device_id}."
+    },
+    "device_not_loaded": {
+      "message": "The Sanremo machine {device_id} is not loaded."
+    }
+  },
+  "selector": {
+    "weekday": {
+      "options": {
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday",
+        "sunday": "Sunday"
+      }
+    }
+  },
+  "services": {
+    "set_schedule_day": {
+      "name": "Set schedule day",
+      "description": "Replaces the on/off time slots for one weekday of the machine's built-in scheduler.",
+      "fields": {
+        "device_id": {
+          "name": "Device",
+          "description": "The Sanremo machine to configure."
+        },
+        "day": {
+          "name": "Day",
+          "description": "The weekday to overwrite."
+        },
+        "slots": {
+          "name": "Time slots",
+          "description": "Up to three on/off windows. Times are rounded to the machine's 15-minute grid. Any slot you leave out is cleared."
+        },
+        "copy_to": {
+          "name": "Copy to",
+          "description": "Other weekdays that should receive the same slots."
+        }
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "ready": {
+        "name": "Ready to brew"
+      },
+      "brewing": {
+        "name": "Brewing"
+      },
+      "tank_level_ok": {
+        "name": "Water tank empty"
+      },
+      "tank_level_low_warning": {
+        "name": "Water tank low"
+      },
+      "boiler_level_ok": {
+        "name": "Boiler water low"
+      },
+      "filter_change_required": {
+        "name": "Water filter"
+      },
+      "steam_booster_heating": {
+        "name": "SteamBooster heating"
+      },
+      "steam_booster_ready": {
+        "name": "SteamBooster ready"
+      },
+      "pre_infusion": {
+        "name": "Pre-infusion"
+      },
+      "firmware_update_available": {
+        "name": "Firmware update available"
+      },
+      "cloud_connected": {
+        "name": "Cloud connection"
+      },
+      "alarm": {
+        "name": "Alarm"
+      },
+      "alarm_water_level_low": {
+        "name": "Alarm: water level low"
+      },
+      "alarm_no_flowmeter_pulses": {
+        "name": "Alarm: no flowmeter pulses"
+      },
+      "alarm_no_tank_level": {
+        "name": "Alarm: no tank level"
+      },
+      "alarm_filling_timeout": {
+        "name": "Alarm: filling timeout"
+      },
+      "alarm_no_tank": {
+        "name": "Alarm: no tank"
+      },
+      "alarm_ntc_boiler_short_circuit": {
+        "name": "Alarm: boiler NTC short-circuit"
+      },
+      "alarm_ntc_boiler_open": {
+        "name": "Alarm: boiler NTC open"
+      },
+      "alarm_ntc_coffee_short_circuit": {
+        "name": "Alarm: coffee NTC short-circuit"
+      },
+      "alarm_ntc_coffee_open": {
+        "name": "Alarm: coffee NTC open"
+      },
+      "alarm_ntc_group_short_circuit": {
+        "name": "Alarm: group NTC short-circuit"
+      },
+      "alarm_ntc_group_open": {
+        "name": "Alarm: group NTC open"
+      },
+      "alarm_lever_transducer_short_circuit": {
+        "name": "Alarm: lever transducer short-circuit"
+      },
+      "alarm_lever_transducer_open": {
+        "name": "Alarm: lever transducer open"
+      },
+      "alarm_pump_pressure_transducer_short_circuit": {
+        "name": "Alarm: pump pressure transducer short-circuit"
+      },
+      "alarm_pump_pressure_transducer_open": {
+        "name": "Alarm: pump pressure transducer open"
+      },
+      "alarm_boiler_pressure_transducer_short_circuit": {
+        "name": "Alarm: boiler pressure transducer short-circuit"
+      },
+      "alarm_boiler_pressure_transducer_open": {
+        "name": "Alarm: boiler pressure transducer open"
+      },
+      "alarm_tank_filling": {
+        "name": "Warning: tank filling"
+      },
+      "alarm_first_tank_filling": {
+        "name": "Warning: first tank filling"
+      },
+      "alarm_first_boiler_filling": {
+        "name": "Warning: first boiler filling"
+      },
+      "alarm_machine_locked": {
+        "name": "Warning: machine locked"
+      },
+      "alarm_low_boiler_level": {
+        "name": "Warning: low boiler level"
+      },
+      "alarm_e03_boiler_probe_open": {
+        "name": "E03 - Boiler probe open"
+      },
+      "alarm_e02_boiler_heating_timeout": {
+        "name": "E02 - Boiler heating timeout"
+      },
+      "alarm_e01_boiler_filling_timeout": {
+        "name": "E01 - Boiler filling timeout"
+      },
+      "alarm_e04_boiler_probe_short_circuit": {
+        "name": "E04 - Boiler probe short-circuit"
+      },
+      "alarm_e06_eeprom_corrupted": {
+        "name": "E06 - EEPROM corrupted"
+      },
+      "alarm_e05_potentiometer_disconnected": {
+        "name": "E05 - Potentiometer disconnected"
+      },
+      "alarm_e07_coffee_dispensing_timeout": {
+        "name": "E07 - Coffee dispensing timeout"
+      },
+      "alarm_e08_filter_replacement_required": {
+        "name": "E08 - Water filter replacement required"
+      },
+      "clock_drift": {
+        "name": "Clock drift"
+      }
+    },
+    "button": {
+      "reset_filter": {
+        "name": "Reset water filter"
+      },
+      "sync_clock": {
+        "name": "Sync clock"
+      },
+      "check_firmware": {
+        "name": "Check for firmware updates"
+      },
+      "reboot": {
+        "name": "Reboot Wi-Fi module"
+      }
+    },
+    "calendar": {
+      "schedule": {
+        "name": "Schedule"
+      }
+    },
+    "number": {
+      "boiler_setpoint": {
+        "name": "Boiler setpoint"
+      },
+      "eco_setpoint": {
+        "name": "ECO setpoint"
+      },
+      "energy_saving_delay": {
+        "name": "Energy saving delay"
+      },
+      "filter_interval": {
+        "name": "Water filter interval"
+      }
+    },
+    "select": {
+      "energy_saving_mode": {
+        "name": "Energy saving",
+        "state": {
+          "eco": "ECO",
+          "standby": "Standby"
+        }
+      }
+    },
+    "sensor": {
+      "boiler_temperature": {
+        "name": "Boiler temperature"
+      },
+      "group_temperature": {
+        "name": "Group temperature"
+      },
+      "steam_temperature": {
+        "name": "Steam boiler temperature"
+      },
+      "pump_pressure": {
+        "name": "Pump pressure"
+      },
+      "steam_pressure": {
+        "name": "Steam pressure"
+      },
+      "last_shot_time": {
+        "name": "Last shot time"
+      },
+      "realtime_flow": {
+        "name": "Flow rate"
+      },
+      "shot_volume": {
+        "name": "Shot volume"
+      },
+      "coffees_today": {
+        "name": "Coffees today"
+      },
+      "coffees_week": {
+        "name": "Coffees this week"
+      },
+      "coffees_month": {
+        "name": "Coffees this month"
+      },
+      "coffees_year": {
+        "name": "Coffees this year"
+      },
+      "coffees_total": {
+        "name": "Coffees total"
+      },
+      "water_dispensed": {
+        "name": "Water dispensed"
+      },
+      "water_to_boiler": {
+        "name": "Water into boiler"
+      },
+      "water_total": {
+        "name": "Water total"
+      },
+      "filter_days_remaining": {
+        "name": "Water filter days remaining"
+      },
+      "filter_life": {
+        "name": "Water filter life"
+      },
+      "energy_saving_countdown": {
+        "name": "Energy saving countdown"
+      },
+      "wifi_signal": {
+        "name": "Wi-Fi signal"
+      },
+      "machine_time": {
+        "name": "Machine clock"
+      },
+      "raw_register": {
+        "name": "Register {source}[{index}]"
+      },
+      "wifi_status": {
+        "name": "Wi-Fi status",
+        "state": {
+          "operating": "Operating [Not connected]",
+          "connecting": "Connecting [Not connected]",
+          "wrong_password": "Wrong password [Not connected]",
+          "ap_not_found": "Access Point not found [Not connected]",
+          "connection_error": "Connection error [Not connected]",
+          "connected": "IP obtained [Connected]",
+          "not_station_mode": "Not in station mode [Not connected]",
+          "unknown": "Unknown error [Not connected]"
+        }
+      },
+      "estimated_brew_temperature": {
+        "name": "Estimated brew temperature"
+      }
+    },
+    "switch": {
+      "power": {
+        "name": "Power"
+      },
+      "steam_booster": {
+        "name": "SteamBooster"
+      },
+      "standby_after_last_coffee": {
+        "name": "Standby after last coffee"
+      },
+      "scheduler": {
+        "name": "Schedule"
+      },
+      "display_fahrenheit": {
+        "name": "Display in Fahrenheit"
+      },
+      "scheduler_monday": {
+        "name": "Schedule Monday"
+      },
+      "scheduler_tuesday": {
+        "name": "Schedule Tuesday"
+      },
+      "scheduler_wednesday": {
+        "name": "Schedule Wednesday"
+      },
+      "scheduler_thursday": {
+        "name": "Schedule Thursday"
+      },
+      "scheduler_friday": {
+        "name": "Schedule Friday"
+      },
+      "scheduler_saturday": {
+        "name": "Schedule Saturday"
+      },
+      "scheduler_sunday": {
+        "name": "Schedule Sunday"
+      },
+      "clock_12_hour": {
+        "name": "12-hour clock display"
+      }
+    },
+    "text": {
+      "machine_name": {
+        "name": "Machine name"
+      }
+    }
+  }
+}

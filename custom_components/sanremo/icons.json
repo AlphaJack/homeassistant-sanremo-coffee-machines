@@ -1,0 +1,167 @@
+{
+  "entity": {
+    "binary_sensor": {
+      "ready": {
+        "default": "mdi:coffee-off-outline",
+        "state": {
+          "on": "mdi:coffee-outline"
+        }
+      },
+      "brewing": {
+        "default": "mdi:coffee-outline",
+        "state": {
+          "on": "mdi:coffee-to-go-outline"
+        }
+      },
+      "pre_infusion": {
+        "default": "mdi:water-outline"
+      },
+      "steam_booster_heating": {
+        "default": "mdi:heat-wave"
+      },
+      "steam_booster_ready": {
+        "default": "mdi:kettle-steam-outline"
+      },
+      "clock_drift": {
+        "default": "mdi:clock-alert-outline"
+      }
+    },
+    "button": {
+      "reset_filter": {
+        "default": "mdi:water-check-outline"
+      },
+      "sync_clock": {
+        "default": "mdi:clock-check-outline"
+      },
+      "check_firmware": {
+        "default": "mdi:cloud-download-outline"
+      }
+    },
+    "calendar": {
+      "schedule": {
+        "default": "mdi:calendar-clock"
+      }
+    },
+    "number": {
+      "boiler_setpoint": {
+        "default": "mdi:thermometer-water"
+      },
+      "eco_setpoint": {
+        "default": "mdi:thermometer-low"
+      },
+      "energy_saving_delay": {
+        "default": "mdi:timer-sand"
+      },
+      "filter_interval": {
+        "default": "mdi:calendar-refresh-outline"
+      }
+    },
+    "select": {
+      "energy_saving_mode": {
+        "default": "mdi:leaf"
+      }
+    },
+    "sensor": {
+      "boiler_temperature": {
+        "default": "mdi:thermometer-water"
+      },
+      "group_temperature": {
+        "default": "mdi:thermometer"
+      },
+      "steam_temperature": {
+        "default": "mdi:kettle-steam-outline"
+      },
+      "last_shot_time": {
+        "default": "mdi:timer-outline"
+      },
+      "realtime_flow": {
+        "default": "mdi:waves-arrow-right"
+      },
+      "shot_volume": {
+        "default": "mdi:cup-outline"
+      },
+      "coffees_today": {
+        "default": "mdi:coffee"
+      },
+      "coffees_week": {
+        "default": "mdi:coffee"
+      },
+      "coffees_month": {
+        "default": "mdi:coffee"
+      },
+      "coffees_year": {
+        "default": "mdi:coffee"
+      },
+      "coffees_total": {
+        "default": "mdi:counter"
+      },
+      "filter_days_remaining": {
+        "default": "mdi:water-outline"
+      },
+      "filter_life": {
+        "default": "mdi:water-percent"
+      },
+      "energy_saving_countdown": {
+        "default": "mdi:timer-sand"
+      },
+      "machine_time": {
+        "default": "mdi:clock-outline"
+      },
+      "raw_register": {
+        "default": "mdi:memory"
+      },
+      "estimated_brew_temperature": {
+        "default": "mdi:coffee-outline"
+      }
+    },
+    "switch": {
+      "power": {
+        "default": "mdi:power"
+      },
+      "steam_booster": {
+        "default": "mdi:kettle-steam-outline"
+      },
+      "standby_after_last_coffee": {
+        "default": "mdi:timer-sand"
+      },
+      "scheduler": {
+        "default": "mdi:calendar-clock"
+      },
+      "display_fahrenheit": {
+        "default": "mdi:temperature-fahrenheit"
+      },
+      "scheduler_monday": {
+        "default": "mdi:calendar-today"
+      },
+      "scheduler_tuesday": {
+        "default": "mdi:calendar-today"
+      },
+      "scheduler_wednesday": {
+        "default": "mdi:calendar-today"
+      },
+      "scheduler_thursday": {
+        "default": "mdi:calendar-today"
+      },
+      "scheduler_friday": {
+        "default": "mdi:calendar-today"
+      },
+      "scheduler_saturday": {
+        "default": "mdi:calendar-today"
+      },
+      "scheduler_sunday": {
+        "default": "mdi:calendar-today"
+      },
+      "clock_12_hour": {
+        "default": "mdi:clock-outline"
+      }
+    },
+    "text": {
+      "machine_name": {
+        "default": "mdi:rename-outline"
+      }
+    }
+  },
+  "services": {
+    "set_schedule_day": "mdi:calendar-edit"
+  }
+}

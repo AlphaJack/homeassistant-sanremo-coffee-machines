@@ -1,0 +1,12 @@
+{
+  "domain": "sanremo",
+  "name": "Sanremo Coffee Machines",
+  "codeowners": ["@AlphaJack"],
+  "config_flow": true,
+  "documentation": "https://github.com/AlphaJack/homeassistant-sanremo-coffee-machines",
+  "integration_type": "device",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/AlphaJack/homeassistant-sanremo-coffee-machines/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}

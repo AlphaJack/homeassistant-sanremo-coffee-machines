@@ -1,0 +1,6 @@
+# Unpinned on purpose so the weekly CI run picks up new Home Assistant releases
+# and surfaces breakage here rather than in a user's log.
+homeassistant>=2026.8.2
+pytest>=8.0.0
+pytest-cov>=5.0.0
+pytest-homeassistant-custom-component>=0.13.250

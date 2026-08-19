@@ -1,0 +1,61 @@
+[tool.ruff]
+target-version = "py313"
+line-length = 88
+
+[tool.ruff.lint]
+# Home Assistant's own rule set, trimmed to what applies to a custom component.
+select = [
+  "A001",   # builtin shadowing
+  "ASYNC",  # async correctness
+  "B",      # bugbear
+  "BLE",    # blind except -- every one here needs a stated reason
+  "C4",     # comprehensions
+  "D",      # docstrings
+  "E",      # pycodestyle
+  "F",      # pyflakes
+  "I",      # import order
+  "ICN001", # import conventions
+  "N",      # naming
+  "PGH",    # pygrep hooks
+  "PL",     # pylint
+  "RET",    # return
+  "RUF",    # ruff
+  "SIM",    # simplify
+  "SLF",    # private member access
+  "T20",    # no print
+  "TRY",    # exception handling
+  "UP",     # pyupgrade
+  "W",      # warnings
+]
+ignore = [
+  "D107",    # __init__ docstrings restate the signature
+  "D203",    # incompatible with D211
+  "D213",    # incompatible with D212
+  "E501",    # line length is handled by the formatter
+  "PLR0912", # register decoding is inherently branchy
+  "PLR2004", # magic values are the whole point of a protocol decoder
+  "TRY003",  # long messages inline are clearer than custom exceptions here
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = [
+  "SLF001",  # tests reach into profile internals deliberately
+  "PLR0915", # end-to-end tests assert a lot
+]
+"custom_components/sanremo/coordinator.py" = [
+  "PLR0913", # an HA coordinator constructor takes what it takes
+  "PLR0917",
+]
+"custom_components/sanremo/profiles/base.py" = [
+  # The push hooks are optional overrides, not abstract requirements: a profile
+  # for a machine with no WebSocket should not have to implement them.
+  "B027",
+]
+
+[tool.ruff.lint.isort]
+force-sort-within-sections = true
+known-first-party = ["custom_components.sanremo"]
+combine-as-imports = true
+
+[tool.ruff.lint.pydocstyle]
+convention = "pep257"

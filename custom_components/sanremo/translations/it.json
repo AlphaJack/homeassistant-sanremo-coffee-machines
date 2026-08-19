@@ -1,0 +1,139 @@
+{
+  "entity": {
+    "binary_sensor": {
+      "alarm_e01_boiler_filling_timeout": {
+        "name": "E01 - Timeout caricamento caldaia"
+      },
+      "alarm_e02_boiler_heating_timeout": {
+        "name": "E02 - Timeout riscaldamento caldaia"
+      },
+      "alarm_e03_boiler_probe_open": {
+        "name": "E03 - Sonda caldaia aperta"
+      },
+      "alarm_e04_boiler_probe_short_circuit": {
+        "name": "E04 - Sonda caldaia corto circuito"
+      },
+      "alarm_e05_potentiometer_disconnected": {
+        "name": "E05 - Potenziometro scollegato"
+      },
+      "alarm_e06_eeprom_corrupted": {
+        "name": "E06 - EEPROM corrotta"
+      },
+      "alarm_e07_coffee_dispensing_timeout": {
+        "name": "E07 - Timeout erogazione caffè"
+      },
+      "alarm_e08_filter_replacement_required": {
+        "name": "E08 - Necessaria sostituzione filtro acqua"
+      },
+      "filter_change_required": {
+        "name": "Filtro acqua"
+      }
+    },
+    "sensor": {
+      "wifi_status": {
+        "state": {
+          "operating": "In funzione [Non connesso]",
+          "connecting": "In connessione [Non connesso]",
+          "wrong_password": "Password errata [Non connesso]",
+          "ap_not_found": "Access Point non trovato [Non connesso]",
+          "connection_error": "Errore connessione [Non connesso]",
+          "connected": "IP ottenuto [Connesso]",
+          "not_station_mode": "Non in modalità station [Non connesso]",
+          "unknown": "Errore sconosciuto [Non connesso]"
+        }
+      },
+      "estimated_brew_temperature": {
+        "name": "Temperatura stimata di estrazione"
+      }
+    },
+    "number": {
+      "eco_setpoint": {
+        "name": "Temperatura modo ECO"
+      },
+      "energy_saving_delay": {
+        "name": "Tempo di attesa"
+      },
+      "filter_interval": {
+        "name": "Intervallo filtro acqua"
+      }
+    },
+    "select": {
+      "energy_saving_mode": {
+        "name": "Risparmio energetico",
+        "state": {
+          "eco": "ECO",
+          "standby": "Stand-by"
+        }
+      }
+    },
+    "switch": {
+      "scheduler": {
+        "name": "Programmazione"
+      },
+      "scheduler_monday": {
+        "name": "Programmazione Lunedì"
+      },
+      "scheduler_tuesday": {
+        "name": "Programmazione Martedì"
+      },
+      "scheduler_wednesday": {
+        "name": "Programmazione Mercoledì"
+      },
+      "scheduler_thursday": {
+        "name": "Programmazione Giovedì"
+      },
+      "scheduler_friday": {
+        "name": "Programmazione Venerdì"
+      },
+      "scheduler_saturday": {
+        "name": "Programmazione Sabato"
+      },
+      "scheduler_sunday": {
+        "name": "Programmazione Domenica"
+      },
+      "display_fahrenheit": {
+        "name": "Display in Fahrenheit"
+      }
+    },
+    "calendar": {
+      "schedule": {
+        "name": "Programmazione"
+      }
+    },
+    "button": {
+      "check_firmware": {
+        "name": "Aggiornamento firmware"
+      },
+      "reboot": {
+        "name": "Riavvia modulo Wi-Fi"
+      }
+    },
+    "text": {
+      "machine_name": {
+        "name": "Nome macchina"
+      }
+    }
+  },
+  "selector": {
+    "weekday": {
+      "options": {
+        "monday": "Lunedì",
+        "tuesday": "Martedì",
+        "wednesday": "Mercoledì",
+        "thursday": "Giovedì",
+        "friday": "Venerdì",
+        "saturday": "Sabato",
+        "sunday": "Domenica"
+      }
+    }
+  },
+  "services": {
+    "set_schedule_day": {
+      "fields": {
+        "day": {
+          "name": "Giorno"
+        }
+      }
+    }
+  }
+}

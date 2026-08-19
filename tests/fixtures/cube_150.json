@@ -1,0 +1,17 @@
+{
+ "key": 150,
+ "fromStaticIp": false,
+ "homeConnection": true,
+ "cloudConnection": false,
+ "localWeb": true,
+ "tz": 0,
+ "ota": false,
+ "signal": 2,
+ "name": "cube1",
+ "mUnitWater": 0,
+ "mUnitPress": 1,
+ "ver": 1.26,
+ "status": 5,
+ "ssid": "TestNet",
+ "rssi": -87
+}

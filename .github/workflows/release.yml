@@ -1,0 +1,69 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to build, for a dry run without publishing"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and attach release asset
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Resolve version from the tag
+        id: version
+        run: |
+          tag="${{ github.event.release.tag_name || inputs.tag }}"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "version=${tag#v}" >> "$GITHUB_OUTPUT"
+
+      # HACS installs from the tagged tree, so the manifest at the tag is what
+      # users actually get. A mismatch here would ship a version that reports
+      # itself as something else, which is worth failing over rather than
+      # silently rewriting.
+      - name: Check manifest version matches the tag
+        run: |
+          manifest=$(jq -r .version custom_components/sanremo/manifest.json)
+          expected="${{ steps.version.outputs.version }}"
+          if [ "$manifest" != "$expected" ]; then
+            echo "::error file=custom_components/sanremo/manifest.json::manifest version is $manifest but the tag says $expected. Bump the manifest and re-tag."
+            exit 1
+          fi
+          echo "manifest and tag agree on $manifest"
+
+      - name: Validate the release is well formed
+        run: |
+          jq -e . custom_components/sanremo/manifest.json > /dev/null
+          jq -e . custom_components/sanremo/strings.json > /dev/null
+          jq -e . hacs.json > /dev/null
+          for f in custom_components/sanremo/translations/*.json; do
+            jq -e . "$f" > /dev/null
+          done
+          test -f custom_components/sanremo/__init__.py
+          echo "release contents look sane"
+
+      # Convenience for manual installs: the zip unpacks straight into
+      # config/custom_components/.
+      - name: Build the archive
+        run: |
+          cd custom_components
+          zip -r "${{ github.workspace }}/sanremo.zip" sanremo \
+            -x '*__pycache__*' -x '*.pyc'
+          cd "${{ github.workspace }}"
+          unzip -l sanremo.zip
+
+      - name: Attach the archive to the release
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload "${{ steps.version.outputs.tag }}" sanremo.zip --clobber
