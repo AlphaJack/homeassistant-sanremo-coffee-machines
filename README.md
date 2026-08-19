@@ -313,4 +313,4 @@ verified against what is inferred. It records, among other things, that
 - The WiNET module and its web app are by Net Software Srl, Italian patent
   n. 102017000107766. This project is unaffiliated with them and with Sanremo.
 
-MIT licensed.
+MIT licensed. Upstream copyright notices are retained in [NOTICE](NOTICE).

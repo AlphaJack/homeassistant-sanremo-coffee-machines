@@ -1,0 +1,12 @@
+This project is a derivative work and retains the copyright notices of the
+projects it draws on, as the MIT license requires. Both are MIT licensed under
+the same terms as LICENSE.
+
+Sanremo YOU protocol handling, ported from ha-sanremo-you:
+    Copyright (c) 2026 chrisfuss
+    https://github.com/chrisfuss/ha-sanremo-you
+
+Sanremo Cube power and water-filter commands, cross-checked against
+homebridge-sanremo-coffee-machines:
+    Copyright (c) 2024 Nareg Sinenian (nareg@sinenian.com)
+    https://github.com/nsinenian/homebridge-sanremo-coffee-machines
