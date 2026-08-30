@@ -1,3 +1,5 @@
+<img src="custom_components/sanremo/brand/icon.png" alt="Sanremo" width="88" align="right"/>
+
 # Sanremo Coffee Machines for Home Assistant
 
 [![HACS Custom](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://hacs.xyz)
