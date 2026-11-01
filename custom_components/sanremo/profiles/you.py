@@ -468,7 +468,7 @@ def _as_int(value: Any) -> int | None:
     """Coerce to int, or None when that is not possible."""
     try:
         return int(value)
-    except (TypeError, ValueError):
+    except TypeError, ValueError:
         return None
 
 

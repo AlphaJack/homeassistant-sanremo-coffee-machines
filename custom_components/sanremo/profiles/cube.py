@@ -132,7 +132,7 @@ def _registers(payload: dict[str, Any]) -> list[int]:
         return []
     try:
         highest = max(int(index) for index, _ in pairs)
-    except (TypeError, ValueError):
+    except TypeError, ValueError:
         return []
 
     out = [0] * (highest + 1)
@@ -621,7 +621,7 @@ def _parse_machine_time(raw: Any) -> tuple[datetime | None, bool | None]:
         parsed = datetime(
             year, month, day, hour, minute, tzinfo=dt_util.DEFAULT_TIME_ZONE
         )
-    except (TypeError, ValueError):
+    except TypeError, ValueError:
         return None, None
     return parsed, dow != 0
 
@@ -640,7 +640,7 @@ def _as_int(value: Any) -> int | None:
     """Coerce to int, or None when that is not possible."""
     try:
         return int(value)
-    except (TypeError, ValueError):
+    except TypeError, ValueError:
         return None
 
 
@@ -648,7 +648,7 @@ def _as_float(value: Any) -> float | None:
     """Coerce to float, or None when that is not possible."""
     try:
         return float(value)
-    except (TypeError, ValueError):
+    except TypeError, ValueError:
         return None
 
 
