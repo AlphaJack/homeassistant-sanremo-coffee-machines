@@ -91,7 +91,9 @@ async def test_device_registry_entry(
 ) -> None:
     """The machine is registered as one device with both firmware versions."""
     registry = dr.async_get(hass)
-    device = registry.async_get_device(identifiers={(DOMAIN, "aa:bb:cc:dd:ee:ff")})
+    device = registry.async_get_device_by_identifier(
+        (DOMAIN, "aa:bb:cc:dd:ee:ff"), setup_integration.entry_id
+    )
 
     assert device is not None
     assert device.name == "cube1"
@@ -435,7 +437,9 @@ async def test_set_schedule_day_action(
 ) -> None:
     """The schedule action writes the right row with the right day value."""
     registry = dr.async_get(hass)
-    device = registry.async_get_device(identifiers={(DOMAIN, "aa:bb:cc:dd:ee:ff")})
+    device = registry.async_get_device_by_identifier(
+        (DOMAIN, "aa:bb:cc:dd:ee:ff"), setup_integration.entry_id
+    )
 
     await hass.services.async_call(
         DOMAIN,
