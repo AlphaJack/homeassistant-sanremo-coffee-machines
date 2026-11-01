@@ -1,7 +1,12 @@
 {
   "domain": "sanremo",
   "name": "Sanremo Coffee Machines",
-  "codeowners": ["@AlphaJack"],
+  "categories": [
+    "appliances_cleaning.cooking"
+  ],
+  "codeowners": [
+    "@AlphaJack"
+  ],
   "config_flow": true,
   "documentation": "https://github.com/AlphaJack/homeassistant-sanremo-coffee-machines",
   "integration_type": "device",
