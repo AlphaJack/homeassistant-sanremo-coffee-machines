@@ -292,9 +292,9 @@ plausible but wrong numbers.
 ## Development
 
 ```bash
-pip install -r requirements-test.txt
-pytest tests --cov=custom_components.sanremo
-ruff check custom_components tests && ruff format --check custom_components tests
+uv sync
+uv run pytest tests --cov=custom_components.sanremo
+uv run ruff check custom_components tests && uv run ruff format --check custom_components tests
 ```
 
 The Cube tests run against captures from a real machine. The register map was

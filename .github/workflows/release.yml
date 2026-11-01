@@ -9,20 +9,26 @@ on:
         description: "Tag to build, for a dry run without publishing"
         required: true
 
-permissions:
-  contents: write
+permissions: {}
 
 jobs:
   release:
     name: Build and attach release asset
     runs-on: ubuntu-latest
+    permissions:
+      # upload the archive to the release
+      contents: write
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Resolve version from the tag
         id: version
+        env:
+          TAG: ${{ github.event.release.tag_name || inputs.tag }}
         run: |
-          tag="${{ github.event.release.tag_name || inputs.tag }}"
+          tag="$TAG"
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
           echo "version=${tag#v}" >> "$GITHUB_OUTPUT"
 
