@@ -2,7 +2,7 @@
 
 # Sanremo Coffee Machines for Home Assistant
 
-[![HACS Custom](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://hacs.xyz)
+[![Marketplace Custom](https://img.shields.io/badge/Marketplace-Custom-41BDF5.svg)](https://www.home-assistant.io/integrations/marketplace/)
 [![Validate](https://github.com/AlphaJack/homeassistant-sanremo-coffee-machines/actions/workflows/validate.yml/badge.svg)](https://github.com/AlphaJack/homeassistant-sanremo-coffee-machines/actions/workflows/validate.yml)
 
 Local control of Wi-Fi capable Sanremo espresso machines. It talks to the WiNET
@@ -33,13 +33,20 @@ a disabled diagnostic sensor. See [Adding a model](#adding-a-model).
 
 ## Installation
 
-Requires Home Assistant 2026.8.2 or newer, which is the version this is tested
-against.
+Requires Home Assistant 2026.8.2 or newer.
 
-In HACS, open the three-dot menu, choose Custom repositories, and add this
-repository as an Integration. Install it and restart.
+[![Open in the Marketplace.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=AlphaJack&repository=homeassistant-sanremo-coffee-machines&category=integration)
 
-[![Add to HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=AlphaJack&repository=homeassistant-sanremo-coffee-machines&category=integration)
+The button opens this repository in the Marketplace on Home Assistant 2026.11 or
+newer, and in HACS on older versions. Select *Install*, then restart if asked.
+
+Without the button:
+
+- **Home Assistant 2026.11 or newer:** go to *Settings → Marketplace*, select
+  *Add from link* and enter `AlphaJack/homeassistant-sanremo-coffee-machines`. The first time, the Marketplace
+  asks you to connect your GitHub account.
+- **Older versions with HACS:** open the three-dot menu, choose *Custom
+  repositories*, and add this repository as an *Integration*.
 
 To install by hand, copy `custom_components/sanremo` into
 `config/custom_components/` and restart.
