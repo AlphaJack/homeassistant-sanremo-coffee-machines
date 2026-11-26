@@ -278,23 +278,56 @@ The vendor app enqueues every 400 ms, cycling `151` most often, `150` every thir
 and `152` every fifth. This integration polls every 10 s and refreshes `150` every
 sixth cycle, because setpoints only change when something writes them.
 
-## 5. YOU, unverified
+## 5. YOU, reads verified
 
-Ported, not re-tested; no YOU was available.
+Ported from another project. The read side was then checked against a YOU on WiNET
+0.14.000, idle and switched off: `key=150` against the WebSocket frame of the same
+second, against the vendor app (`you.html`, `you.js`), and against a week of
+recorded shots. Writes and the telemetry of a running shot are not re-tested.
 
 `key=150` returns `status[]` and `settings[]`. Status indices: `10` phase, `12`
-machine status, `13` alarms, `14` warnings, `15` group temp (÷10), `16` heater temp
-(÷10), `17` service heater temp, `18` service heater pressure (÷100), `19` pump
-pressure (÷10), `20` counter volume, `22` dose time (÷10), `23` level sensor, `29`
-deep sleep, `30` real-time flow, `31` paddle pressure. `settings[0…3]` are the
-steam-heater, group, filter-holder and steam-pressure setpoints. Machine status:
-`0` off, `1` on, `2` ECO, `3` deep sleep.
+machine status, `13` alarms, `14` warnings, `15` group temp (÷10), `16` coffee
+boiler temp (÷10), `17` steam boiler temp (÷10), `18` steam pressure (÷100), `19`
+pump pressure (÷10), `20` shot volume (÷10), `21` group status, `22` dose time
+(÷10), `23` level sensor, `29` deep sleep, `30` flow (÷10), `31` paddle pressure.
+Machine status: `0` off, `1` on, `2` ECO, `3` deep sleep. Group status: `0` idle,
+`1`–`3` a dose key, `4` manual.
+
+What the check settled:
+
+* `17` is in tenths. The vendor app stores it raw but never displays it. A reply
+  with `17 = 452` came with `tempBolierServices: 45.2` on the WebSocket.
+* `19` is ÷10. The vendor app divides by 100, but does not display it either.
+  Recorded shots peak at a raw 80–105, which is 8–10.5 bar.
+* `20` and `30` are in tenths and are not cleared when a shot ends. A machine that
+  had been off for hours still reported `640` and `22`: its last shot ran on a key
+  dosed at `64`. Only group status says whether a shot is running, so flow is
+  reported as zero while the group is idle. Beanconqueror's YOU driver scales and
+  resets the same way.
+* `23` reads `0` for as long as the machine is off, whatever is in the tank. With
+  the machine on it reads `1` while there is water; a `0` came with alarm bit 1 and
+  the "machine locked" warning when the tank ran dry mid-shot. The vendor app
+  likewise only shows a low tank while the group is active.
+* The vendor app reads `10`–`11` as the board serial number, not a phase.
+
+`settings[0…3]`, all ÷10: steam boiler temperature, coffee boiler temperature,
+group temperature, steam pressure. The vendor's names for `1` and `2` are
+`SetPointTemperatureGroup` and `SetPointTemperatureFilterHolder`, but its page
+shows them as the boiler and the group temperature and writes them with IDs 1 and
+3. In recorded data the boiler settles at `settings[1]` and the group near
+`settings[2]`. `you.html` bounds both temperatures to 80–100 °C and the pressure
+to 0–2 bar.
+
+`counters[]` holds seven 32-bit values, high word first: dose keys 1 to 3,
+continuous, paddle, steam, tea. The first five are coffees.
 
 Unlike the Cube's ID 1, all YOU setpoint writes take tenths.
 
 Firmware 0.12+ adds `GET /api/action/on`, `/api/action/standby`,
 `/api/action/{p1,p2,p3,man}/{start,stop}`, `/api/doses`, `/api/counters`, and a
-WebSocket on port 81 carrying live brew telemetry. None exist on the Cube.
+WebSocket on port 81 carrying live brew telemetry. None exist on the Cube. A frame
+carries `tempBoilerCoffe` and `tempBolierServices` (sic) in °C, `pumpServicesPress`
+(÷100), `pumpPress`, `counterVol` and `realtimeFlow` (all ÷10), and `groupStatus`.
 
 ## 6. Known unknowns
 

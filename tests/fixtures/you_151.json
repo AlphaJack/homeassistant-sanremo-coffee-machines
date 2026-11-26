@@ -1,0 +1,24 @@
+{
+ "key": 150,
+ "localWeb": true,
+ "ota": false,
+ "config": 0,
+ "status": 5,
+ "ssid": "TestNet",
+ "rssi": -81,
+ "mem": 30280,
+ "registers": [
+  [
+   0,
+   1280
+  ],
+  [
+   1,
+   910
+  ],
+  [
+   2,
+   900
+  ]
+ ]
+}

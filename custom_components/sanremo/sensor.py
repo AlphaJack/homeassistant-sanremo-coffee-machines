@@ -127,6 +127,7 @@ SENSORS: tuple[SanremoSensorDescription, ...] = (
         # No device class: VOLUME forbids MEASUREMENT, and this reading is live.
         native_unit_of_measurement=UnitOfVolume.MILLILITERS,
         state_class=SensorStateClass.MEASUREMENT,
+        suggested_display_precision=1,
         value_fn=lambda state: state.shot_volume,
     ),
     # ── Coffee counters: periodic ones reset, so only the total accumulates ───

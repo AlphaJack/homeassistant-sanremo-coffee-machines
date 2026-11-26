@@ -1,0 +1,34 @@
+{
+ "status": 0,
+ "description": "OFF",
+ "groupStatus": 0,
+ "statusPhase": 0,
+ "alarms": 0,
+ "warnings": 0,
+ "tempBoilerCoffe": 42.2,
+ "tempBolierServices": 45.2,
+ "pumpServicesPress": 1,
+ "pumpPress": 0,
+ "counterVol": 640,
+ "realtimeFlow": 22,
+ "setPressPaddle": 0.0,
+ "appScaleConnection": 0,
+ "recipeWeightSetPoint": 0,
+ "cupWeightFromExtScale": 0,
+ "realTimeFlowCalcByTheScale": 0,
+ "freeMem": 29184,
+ "wifiSignal": -80,
+ "doses": {
+  "key1": 50,
+  "key2": 60,
+  "key3": 64,
+  "keyTea": 0
+ },
+ "inetTime": {
+  "YY": 0,
+  "MM": 0,
+  "DD": 0,
+  "h": 0,
+  "m": 0
+ }
+}
