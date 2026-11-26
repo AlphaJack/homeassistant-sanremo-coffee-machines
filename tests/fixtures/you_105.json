@@ -1,0 +1,18 @@
+{
+ "key": 105,
+ "localWeb": true,
+ "status": 5,
+ "lastDisconnectReason": 200,
+ "lastCloudErrReason": 0,
+ "useDhcp": 1,
+ "currentIp": "192.168.1.50",
+ "currentMask": "255.255.255.0",
+ "currentGw": "192.168.1.1",
+ "mac": "AABBCCDDEEFF",
+ "client": 2,
+ "ssid": "TestNet",
+ "signal": 3,
+ "fwVer": "0.14.000",
+ "boot": 2,
+ "name": "SANREMO-YOU"
+}

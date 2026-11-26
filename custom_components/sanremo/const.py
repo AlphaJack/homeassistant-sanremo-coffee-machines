@@ -102,6 +102,10 @@ CUBE_ENERGY_SAVING_DELAY_MAX_MIN: Final = 90
 CUBE_FILTER_MONTHS_MIN: Final = 0
 CUBE_FILTER_MONTHS_MAX: Final = 12
 
+# ── YOU coffee boiler bounds, from the min/max attributes in you.html ──────────
+YOU_BOILER_MIN_C: Final = 80.0
+YOU_BOILER_MAX_C: Final = 100.0
+
 #: ``key=151`` config value marking the CUBE R, whose setpoint is adjustable.
 CUBE_CONFIG_ADJUSTABLE_BOILER: Final = 2
 CUBE_ECO_MIN_BOARD_VERSION: Final = 1.14

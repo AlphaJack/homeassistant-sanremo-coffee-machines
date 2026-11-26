@@ -15,7 +15,7 @@ from typing import Any, Final
 import aiohttp
 from homeassistant.util import dt as dt_util
 
-from ..const import Capability, WaterSource
+from ..const import YOU_BOILER_MAX_C, YOU_BOILER_MIN_C, Capability, WaterSource
 from ..models import DeviceInfo, MachineState, ScheduleSlot
 from .base import MachineProfile
 
@@ -37,6 +37,7 @@ ST_SERVICE_HEATER_TEMP: Final = 17
 ST_SERVICE_HEATER_PRESSURE: Final = 18
 ST_PUMP_PRESSURE: Final = 19
 ST_COUNTER_VOL: Final = 20
+ST_GROUP_STATUS: Final = 21
 ST_DOSE_TIME: Final = 22
 ST_LEVEL_SENSOR: Final = 23
 ST_DEEP_SLEEP: Final = 29
@@ -44,15 +45,21 @@ ST_REALTIME_FLOW: Final = 30
 ST_SET_PRESS_PADDLE: Final = 31
 
 # ── settings[] indices ─────────────────────────────────────────────────────────
-SET_STEAM_HEATER: Final = 0
-SET_GROUP_TEMP: Final = 1
-SET_FILTER_HOLDER_TEMP: Final = 2
+# Named for what each one regulates, not after the vendor's variables. The vendor
+# app shows its ``SetPointTemperatureGroup`` (1) as the boiler temperature and
+# writes it with ID 1; its ``SetPointTemperatureFilterHolder`` (2) is the group.
+SET_STEAM_TEMP: Final = 0
+SET_COFFEE_BOILER_TEMP: Final = 1
+SET_GROUP_TEMP: Final = 2
 SET_STEAM_PRESSURE: Final = 3
 
 MACHINE_STATUS_OFF: Final = 0
 MACHINE_STATUS_ON: Final = 1
 MACHINE_STATUS_ECO: Final = 2
 MACHINE_STATUS_DEEP_SLEEP: Final = 3
+
+#: Any other group status (1-3 a dose key, 4 manual) means a shot is running.
+GROUP_STATUS_IDLE: Final = 0
 
 ALARM_BITS: Final[dict[str, int]] = {
     "no_flowmeter_pulses": 1 << 0,
@@ -85,6 +92,8 @@ SHOT_MODES: Final[dict[int, str]] = {1: "p1", 2: "p2", 3: "p3", 4: "man"}
 
 #: Seven counter categories, each split across a high and a low register.
 COUNTER_PAIRS: Final = 7
+#: The first five are coffees: keys 1-3, continuous and paddle. Steam and tea follow.
+COFFEE_COUNTER_PAIRS: Final = 5
 
 SCHEDULER_SLOTS: Final = 6
 SCHEDULER_IDX_ENABLED: Final = 1
@@ -135,9 +144,10 @@ class YouProfile(MachineProfile):
             Capability.SCHEDULER,
         }
 
-        # No BOILER_SETPOINT: the write target is unverified and unbounded here.
+        # No BOILER_SETPOINT: the vendor app writes it with ID 1, in tenths, but
+        # that write has not been exercised against hardware from this integration.
         settings = payload.get("settings") or []
-        if len(settings) > SET_STEAM_HEATER:
+        if len(settings) > SET_COFFEE_BOILER_TEMP:
             _LOGGER.debug(
                 "YOU at %s reports %s setpoints; the setpoint control stays "
                 "disabled until its write path is verified against hardware",
@@ -184,12 +194,14 @@ class YouProfile(MachineProfile):
             if (ota := lightweight.get("ota")) is not None:
                 state.firmware_update_available = bool(ota)
 
-        # Carry over the push-only fields so a poll does not blank them out.
+        # Carry over the push-only fields so a poll does not blank them out, and
+        # the tank level, which the machine only reads while it is on.
         if self._last_state is not None:
             for field in (
                 "realtime_flow",
                 "shot_volume",
                 "pump_pressure",
+                "tank_level_ok",
             ):
                 if getattr(state, field) is None:
                     setattr(state, field, getattr(self._last_state, field))
@@ -290,14 +302,19 @@ class YouProfile(MachineProfile):
         state = replace(self._last_state)
         if (value := frame.get("tempBoilerCoffe")) is not None:
             state.boiler_temperature = float(value)
+        # Sic: the firmware misspells this key. Already in °C, unlike status[17].
+        if (value := frame.get("tempBolierServices")) is not None:
+            state.steam_temperature = float(value)
         if (value := frame.get("pumpPress")) is not None:
             state.pump_pressure = value / 10
         if (value := frame.get("pumpServicesPress")) is not None:
             state.steam_pressure = value / 100
+        if (value := frame.get("groupStatus")) is not None:
+            state.brewing = value != GROUP_STATUS_IDLE
         if (value := frame.get("realtimeFlow")) is not None:
-            state.realtime_flow = float(value)
+            state.realtime_flow = _live_flow(value, state.brewing)
         if (value := frame.get("counterVol")) is not None:
-            state.shot_volume = int(value)
+            state.shot_volume = value / 10
         if (value := frame.get("alarms")) is not None:
             state.alarms.update(
                 {slug: bool(value & mask) for slug, mask in ALARM_BITS.items()}
@@ -391,30 +408,54 @@ def _apply_status(state: MachineState, status: list[int]) -> None:
     if (value := st(ST_HEATER_TEMP)) is not None:
         state.boiler_temperature = value / 10
     if (value := st(ST_SERVICE_HEATER_TEMP)) is not None:
-        state.steam_temperature = float(value)
+        state.steam_temperature = value / 10
     if (value := st(ST_SERVICE_HEATER_PRESSURE)) is not None:
         state.steam_pressure = value / 100
     if (value := st(ST_PUMP_PRESSURE)) is not None:
         state.pump_pressure = value / 10
     if (value := st(ST_DOSE_TIME)) is not None:
         state.last_shot_time = value / 10
+    if (value := st(ST_GROUP_STATUS)) is not None:
+        state.brewing = value != GROUP_STATUS_IDLE
     if (value := st(ST_COUNTER_VOL)) is not None:
-        state.shot_volume = value
+        state.shot_volume = value / 10
     if (value := st(ST_REALTIME_FLOW)) is not None:
-        state.realtime_flow = float(value)
+        state.realtime_flow = _live_flow(value, state.brewing)
     if (value := st(ST_LEVEL_SENSOR)) is not None:
-        state.tank_level_ok = bool(value)
+        state.tank_level_ok = _tank_level_ok(value, state.is_on)
         state.water_source = WaterSource.TANK
+
+
+def _live_flow(raw: int, brewing: bool | None) -> float:
+    """Return the flow in mL/s, or zero once the shot has ended.
+
+    The board keeps reporting the last shot's flow until the next one starts, so
+    the raw value alone cannot tell a running shot from a finished one.
+    """
+    return 0.0 if brewing is False else raw / 10
+
+
+def _tank_level_ok(level: int, is_on: bool | None) -> bool | None:
+    """Return the tank state, or None while the sensor is not being read.
+
+    The level sensor reads 0 for as long as the machine is off, whatever is in
+    the tank. Only a 0 seen while the machine is on means the tank is empty.
+    """
+    if level:
+        return True
+    return False if is_on else None
 
 
 def _apply_settings(state: MachineState, settings: list[int]) -> None:
     """Decode the ``settings[]`` setpoint array."""
-    if len(settings) > SET_STEAM_HEATER:
-        state.boiler_setpoint = settings[SET_STEAM_HEATER] / 10
+    if len(settings) > SET_STEAM_TEMP:
+        state.steam_temperature_setpoint = settings[SET_STEAM_TEMP] / 10
+    if len(settings) > SET_COFFEE_BOILER_TEMP:
+        state.boiler_setpoint = settings[SET_COFFEE_BOILER_TEMP] / 10
+        state.boiler_setpoint_min = YOU_BOILER_MIN_C
+        state.boiler_setpoint_max = YOU_BOILER_MAX_C
     if len(settings) > SET_GROUP_TEMP:
         state.group_setpoint = settings[SET_GROUP_TEMP] / 10
-    if len(settings) > SET_FILTER_HOLDER_TEMP:
-        state.filter_holder_setpoint = settings[SET_FILTER_HOLDER_TEMP] / 10
     if len(settings) > SET_STEAM_PRESSURE:
         state.steam_pressure_setpoint = settings[SET_STEAM_PRESSURE] / 10
 
@@ -425,10 +466,10 @@ def _apply_counters(state: MachineState, payload: dict[str, Any]) -> None:
 
     counters = payload.get("counters") or []
     if len(counters) >= COUNTER_PAIRS * 2:
-        # The upstream project reads these high word first.
+        # High word first. Steam and tea activations are not coffees.
         state.coffees_total = sum(
             (counters[index] << 16) | counters[index + 1]
-            for index in range(0, COUNTER_PAIRS * 2, 2)
+            for index in range(0, COFFEE_COUNTER_PAIRS * 2, 2)
         )
 
 

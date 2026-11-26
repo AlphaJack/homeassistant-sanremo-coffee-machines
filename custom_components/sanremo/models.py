@@ -65,16 +65,19 @@ class MachineState:
     estimated_brew_temperature: float | None = None
     group_temperature: float | None = None
     group_setpoint: float | None = None
-    filter_holder_setpoint: float | None = None
     steam_temperature: float | None = None
+    steam_temperature_setpoint: float | None = None
     steam_pressure: float | None = None
     steam_pressure_setpoint: float | None = None
     pump_pressure: float | None = None
 
     # ── Brewing ───────────────────────────────────────────────────────────────
+    #: True while a shot is running. Not derivable from the flow, which a
+    #: machine may keep reporting after the shot has ended.
+    brewing: bool | None = None
     last_shot_time: float | None = None
     realtime_flow: float | None = None
-    shot_volume: int | None = None
+    shot_volume: float | None = None
 
     # ── Water ─────────────────────────────────────────────────────────────────
     tank_level_ok: bool | None = None

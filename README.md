@@ -14,12 +14,13 @@ Python dependencies.
 | Machine | Support | Tested on hardware |
 | --- | --- | --- |
 | Cube, Cube R | Full | Yes |
-| YOU | Full | No |
+| YOU | Full | Readings only |
 | Other WiNET machines | Partial | No |
 
 Cube support was verified against a Cube R running WiNET 0.24.000 with board
-firmware 1.26. YOU support is a port of another project's protocol work and has not
-been re-tested, so please report issues.
+firmware 1.26. YOU support is a port of another project's protocol work. Its
+readings were checked against a YOU on WiNET 0.14.000; its commands and the live
+telemetry of a running shot have not been re-tested, so please report issues.
 
 Sanremo's app is only a launcher, so there is no vendor model list to consult.
 Machines are identified by probing, and the entity set follows what each one
@@ -202,8 +203,9 @@ The YOU also pushes brew telemetry over a WebSocket. The Cube has no such port.
 
 ## Known limitations
 
-- Only the Cube family is tested on hardware. YOU support is a port, and other
-  models fall back to the generic profile.
+- Only the Cube family is fully tested on hardware. YOU support is a port whose
+  readings were checked against one machine, and other models fall back to the
+  generic profile.
 - No discovery. WiNET devices do not advertise over mDNS, and the vendor app finds
   them by SSID prefix. Add machines by IP.
 - Resetting the water filter cannot be undone. The protocol offers no way to write
@@ -317,6 +319,8 @@ verified against what is inferred. It records, among other things, that
 
 - [`ha-sanremo-you`](https://github.com/chrisfuss/ha-sanremo-you) for the YOU
   protocol, its REST endpoints and its WebSocket telemetry.
+- [Beanconqueror](https://github.com/graphefruit/Beanconqueror) for the scaling of
+  the YOU's flow and volume telemetry.
 - [`homebridge-sanremo-coffee-machines`](https://github.com/nsinenian/homebridge-sanremo-coffee-machines)
   for independent confirmation of the Cube's power and filter commands.
 - The WiNET module and its web app are by Net Software Srl, Italian patent

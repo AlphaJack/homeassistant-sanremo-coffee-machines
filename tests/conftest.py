@@ -1,7 +1,7 @@
 """Fixtures for the Sanremo integration tests.
 
-Payloads are captures from a Cube R. The map was reverse engineered, so a
-synthetic fixture would only confirm its author's assumptions.
+Payloads are captures from a Cube R and from a YOU. The maps were reverse
+engineered, so a synthetic fixture would only confirm its author's assumptions.
 """
 
 from __future__ import annotations
@@ -37,6 +37,16 @@ def cube_payloads() -> dict[str, dict[str, Any]]:
     return {
         key: load_fixture(f"cube_{key}.json") for key in ("105", "150", "151", "152")
     }
+
+
+@pytest.fixture
+def you_payloads() -> dict[str, dict[str, Any]]:
+    """Return the captured YOU replies, keyed by RPC key.
+
+    Taken from an idle, switched-off YOU on WiNET 0.14.000. ``ws`` is the
+    WebSocket frame the machine broadcast in the same second as the ``150`` reply.
+    """
+    return {key: load_fixture(f"you_{key}.json") for key in ("105", "150", "151", "ws")}
 
 
 @pytest.fixture

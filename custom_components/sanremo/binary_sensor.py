@@ -55,14 +55,18 @@ BINARY_SENSORS: tuple[SanremoBinarySensorDescription, ...] = (
         translation_key="brewing",
         device_class=BinarySensorDeviceClass.RUNNING,
         available_fn=lambda coordinator: coordinator.push_alive,
-        # Only meaningful where live flow telemetry exists (the YOU's WebSocket).
-        supported_fn=lambda state: state.realtime_flow is not None,
-        value_fn=lambda state: (state.realtime_flow or 0) > 0,
+        # From the group status, not the flow: the YOU keeps reporting the last
+        # shot's flow after the shot has ended.
+        supported_fn=lambda state: state.brewing is not None,
+        value_fn=lambda state: state.brewing,
     ),
     SanremoBinarySensorDescription(
         key="tank_level_ok",
         translation_key="tank_level_ok",
         device_class=BinarySensorDeviceClass.PROBLEM,
+        # Not the value: a YOU that is off reports no tank level at all, and the
+        # entity must still exist when the integration starts in that state.
+        supported_fn=lambda state: state.water_source is not None,
         # Inverted on purpose: "problem" is true when the tank is *not* ok.
         value_fn=lambda state: (
             None if state.tank_level_ok is None else not state.tank_level_ok
